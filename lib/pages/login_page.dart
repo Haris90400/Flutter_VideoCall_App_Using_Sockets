@@ -1,6 +1,10 @@
+import 'package:chatify/providers/authentication_provider.dart';
+import 'package:chatify/services/navigation_service.dart';
 import 'package:chatify/widgets/rounded_button.dart';
 import 'package:chatify/widgets/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,11 +16,19 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late double height;
   late double width;
+  late NavigationService _navigationService;
+  late AuthenticationProvider _authenticationProvider;
   final _loginFormKey = GlobalKey<FormState>();
+
+  String? email;
+  String? password;
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
+    _authenticationProvider = Provider.of<AuthenticationProvider>(context);
+    _navigationService = GetIt.instance.get<NavigationService>();
     return _buildUi();
   }
 
@@ -69,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginForm() {
     return Container(
-      height: height * 0.18,
+      height: height * 0.192,
       child: Form(
         key: _loginFormKey,
         child: Column(
@@ -78,14 +90,22 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CustomTextField(
-              onSaved: (text) {},
+              onSaved: (text) {
+                setState(() {
+                  email = text;
+                });
+              },
               regEx:
-                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
               hintText: "Email",
               obscureText: false,
             ),
             CustomTextField(
-              onSaved: (text) {},
+              onSaved: (text) {
+                setState(() {
+                  password = text;
+                });
+              },
               regEx: r".{8,}",
               hintText: "Password",
               obscureText: true,
@@ -101,7 +121,12 @@ class _LoginPageState extends State<LoginPage> {
       name: 'Login',
       height: height * 0.06,
       width: width * 0.65,
-      onPressed: () {},
+      onPressed: () {
+        if (_loginFormKey.currentState!.validate()) {
+          _loginFormKey.currentState!.save();
+          _authenticationProvider.loginUsingEmailPassword(email!, password!);
+        }
+      },
     );
   }
 

@@ -39,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
       title: 'Chatify',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        backgroundColor: Color.fromRGBO(36, 35, 39, 1.0),
         scaffoldBackgroundColor: Color.fromRGBO(36, 35, 39, 1.0),
       ),
       home: Scaffold(
@@ -48,12 +47,13 @@ class _SplashScreenState extends State<SplashScreen> {
             height: 200,
             width: 200,
             decoration: const BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage(
-                'assets/images/logo.png',
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/logo.png',
+                ),
+                fit: BoxFit.contain,
               ),
-              fit: BoxFit.contain,
-            )),
+            ),
           ),
         ),
       ),

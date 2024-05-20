@@ -1,8 +1,10 @@
 import 'package:chatify/pages/login_page.dart';
 import 'package:chatify/pages/splash_page.dart';
+import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/services/navigation_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   runApp(
@@ -10,7 +12,7 @@ void main() async {
       key: UniqueKey(),
       onInitializationComplete: () {
         runApp(
-          MainApp(),
+          const MainApp(),
         );
       },
     ),
@@ -22,23 +24,36 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chatify',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        backgroundColor: Color.fromRGBO(37, 35, 41, 1),
-        scaffoldBackgroundColor: Color.fromRGBO(50, 48, 58, 1),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color.fromRGBO(30, 29, 37, 1.0),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthenticationProvider>(
+          create: (context) {
+            return AuthenticationProvider();
+          },
         ),
+      ],
+      child: MaterialApp(
+        title: 'Chatify',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color.fromRGBO(50, 48, 58, 1),
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Color.fromRGBO(
+              30,
+              29,
+              37,
+              1.0,
+            ),
+          ),
+        ),
+        navigatorKey: NavigationService.navigatorKey,
+        initialRoute: '/login',
+        routes: {
+          '/login': (BuildContext context) {
+            return const LoginPage();
+          }
+        },
       ),
-      navigatorKey: NavigationService.navigatorKey,
-      initialRoute: '/login',
-      routes: {
-        '/login': (BuildContext context) {
-          return LoginPage();
-        }
-      },
     );
   }
 }
