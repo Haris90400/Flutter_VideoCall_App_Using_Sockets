@@ -1,3 +1,4 @@
+import 'package:chatify/pages/login_page.dart';
 import 'package:chatify/pages/splash_page.dart';
 import 'package:chatify/services/navigation_service.dart';
 
@@ -25,12 +26,19 @@ class MainApp extends StatelessWidget {
       title: 'Chatify',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        backgroundColor: Color.fromRGBO(36, 35, 39, 1.0),
-        scaffoldBackgroundColor: Color.fromRGBO(36, 35, 39, 1.0),
+        backgroundColor: Color.fromRGBO(37, 35, 41, 1),
+        scaffoldBackgroundColor: Color.fromRGBO(50, 48, 58, 1),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Color.fromRGBO(30, 29, 37, 1.0),
         ),
       ),
+      navigatorKey: NavigationService.navigatorKey,
+      initialRoute: '/login',
+      routes: {
+        '/login': (BuildContext context) {
+          return LoginPage();
+        }
+      },
     );
   }
 }
