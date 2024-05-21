@@ -29,7 +29,7 @@ class AuthenticationProvider extends ChangeNotifier {
                 "name": _userData["name"],
                 "email": _userData["email"],
                 "lastActive": _userData["lastActive"],
-                "imageUrl": _userData["imageUrl"]
+                "imageUrl": _userData["imageUrl"],
               },
             );
             _navigationService.removeAndNavigateToRoute('/home');
@@ -50,6 +50,29 @@ class AuthenticationProvider extends ChangeNotifier {
       print(_auth.currentUser);
     } on FirebaseAuthException {
       print("Error logging in!");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String?> registerUserUsingEmailPassword(
+      String _email, String _password) async {
+    try {
+      UserCredential _credentials = await _auth.createUserWithEmailAndPassword(
+        email: _email,
+        password: _password,
+      );
+      return _credentials.user!.uid;
+    } on FirebaseAuthException {
+      print("error registering user");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      await _auth.signOut();
     } catch (e) {
       print(e);
     }
