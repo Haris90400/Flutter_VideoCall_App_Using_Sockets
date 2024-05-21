@@ -1,5 +1,7 @@
 import 'package:chatify/services/media_services.dart';
+import 'package:chatify/widgets/rounded_button.dart';
 import 'package:chatify/widgets/rounded_image.dart';
+import 'package:chatify/widgets/text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -14,8 +16,13 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   late double height;
   late double width;
+  final _registerFormKey = GlobalKey<FormState>();
 
   PlatformFile? _profileImage;
+
+  String? _email;
+  String? _password;
+  String? _name;
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -37,6 +44,17 @@ class _RegisterPageState extends State<RegisterPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _profileImageField(),
+            SizedBox(
+              height: height * 0.05,
+            ),
+            _registerFormField(),
+            SizedBox(
+              height: height * 0.05,
+            ),
+            _registerButton(),
+            SizedBox(
+              height: height * 0.02,
+            ),
           ],
         ),
       ),
@@ -69,5 +87,60 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       }(),
     );
+  }
+
+  Widget _registerFormField() {
+    return SizedBox(
+      height: height * 0.35,
+      child: Form(
+        key: _registerFormKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomTextField(
+              onSaved: (value) {
+                setState(() {
+                  _name = value;
+                });
+              },
+              regEx: r'.{8,}',
+              hintText: 'Name',
+              obscureText: false,
+            ),
+            CustomTextField(
+              onSaved: (value) {
+                setState(() {
+                  _email = value;
+                });
+              },
+              regEx:
+                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
+              hintText: 'Email',
+              obscureText: false,
+            ),
+            CustomTextField(
+              onSaved: (value) {
+                setState(() {
+                  _password = value;
+                });
+              },
+              regEx: r'.{8,}',
+              hintText: 'Password',
+              obscureText: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _registerButton() {
+    return RoundedButton(
+        name: "Register",
+        height: height * 0.065,
+        width: width * 0.65,
+        onPressed: () {});
   }
 }
