@@ -1,5 +1,6 @@
 import 'package:chatify/pages/home_page.dart';
 import 'package:chatify/pages/login_page.dart';
+import 'package:chatify/pages/register_page.dart';
 import 'package:chatify/pages/splash_page.dart';
 import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/services/navigation_service.dart';
@@ -55,6 +56,9 @@ class MainApp extends StatelessWidget {
           },
           '/home': (BuildContext context) {
             return const HomePage();
+          },
+          '/register': (BuildContext context) {
+            return const RegisterPage();
           }
         },
       ),
