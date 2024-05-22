@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,15 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAEncFkrFbVcPMyXimcFkzNwHlc8IliVcI',
+    appId: '1:831540079320:web:22961d2f2add42c8ca45ad',
+    messagingSenderId: '831540079320',
+    projectId: 'chatify-e712d',
+    authDomain: 'chatify-e712d.firebaseapp.com',
+    storageBucket: 'chatify-e712d.appspot.com',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDYpHGhmFAQ_7Z8QSR432TAPz_KaJYr980',
     appId: '1:831540079320:android:a29983eb6f134488ca45ad',
@@ -64,5 +67,14 @@ class DefaultFirebaseOptions {
     projectId: 'chatify-e712d',
     storageBucket: 'chatify-e712d.appspot.com',
     iosBundleId: 'com.example.chatify',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDjUj1K_eN4Bc2Tr_h6hDOQi2kFKXARmwA',
+    appId: '1:831540079320:ios:f08eb1e2d9a149dbca45ad',
+    messagingSenderId: '831540079320',
+    projectId: 'chatify-e712d',
+    storageBucket: 'chatify-e712d.appspot.com',
+    iosBundleId: 'com.example.chatify.RunnerTests',
   );
 }
