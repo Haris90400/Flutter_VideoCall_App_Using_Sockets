@@ -89,11 +89,13 @@ class _RegisterPageState extends State<RegisterPage> {
       child: () {
         if (_profileImage != null) {
           return RoundeImageFile(
+            key: UniqueKey(),
             image: _profileImage!,
             size: height * 0.15,
           );
         } else {
           return RoundedImageNetwork(
+            key: UniqueKey(),
             imagePath:
                 'https://img.freepik.com/premium-photo/male-female-profile-avatar-user-avatars-gender-icons_1020867-75190.jpg?w=740',
             size: height * 0.15,
