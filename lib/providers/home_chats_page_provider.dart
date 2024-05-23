@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-class ChatPageProvider extends ChangeNotifier {
+class HomeChatPageProvider extends ChangeNotifier {
   AuthenticationProvider _authenticationProvider;
   late DatabaseService _db;
 
@@ -17,7 +17,7 @@ class ChatPageProvider extends ChangeNotifier {
 
   late StreamSubscription _chatStream;
 
-  ChatPageProvider(this._authenticationProvider) {
+  HomeChatPageProvider(this._authenticationProvider) {
     _db = GetIt.instance.get<DatabaseService>();
     getChats();
   }

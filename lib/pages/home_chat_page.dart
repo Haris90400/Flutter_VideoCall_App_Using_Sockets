@@ -3,7 +3,7 @@ import 'package:chatify/models/chat_message.dart';
 import 'package:chatify/models/user.dart';
 import 'package:chatify/pages/chat_page.dart';
 import 'package:chatify/providers/authentication_provider.dart';
-import 'package:chatify/providers/chats_page_provider.dart';
+import 'package:chatify/providers/home_chats_page_provider.dart';
 import 'package:chatify/services/navigation_service.dart';
 import 'package:chatify/widgets/custom_list_view_tiles.dart';
 import 'package:chatify/widgets/top_bar.dart';
@@ -22,7 +22,7 @@ class _ChatsPageState extends State<ChatsPage> {
   late double height;
   late double width;
   late AuthenticationProvider _auth;
-  late ChatPageProvider _chatPageProvider;
+  late HomeChatPageProvider _chatPageProvider;
   late NavigationService _navigationService;
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,9 @@ class _ChatsPageState extends State<ChatsPage> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ChatPageProvider>(
+        ChangeNotifierProvider<HomeChatPageProvider>(
           create: (context) {
-            return ChatPageProvider(_auth);
+            return HomeChatPageProvider(_auth);
           },
         )
       ],
@@ -45,7 +45,7 @@ class _ChatsPageState extends State<ChatsPage> {
 
   Widget _buildUi() {
     return Builder(builder: (BuildContext context) {
-      _chatPageProvider = context.watch<ChatPageProvider>();
+      _chatPageProvider = context.watch<HomeChatPageProvider>();
       return Container(
         padding: EdgeInsets.symmetric(
           horizontal: width * 0.03,
