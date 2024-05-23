@@ -116,6 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CustomTextField(
+              Color.fromARGB(255, 52, 50, 65),
               onSaved: (value) {
                 setState(() {
                   _name = value;
@@ -126,6 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: false,
             ),
             CustomTextField(
+              Color.fromARGB(255, 52, 50, 65),
               onSaved: (value) {
                 setState(() {
                   _email = value;
@@ -137,6 +139,7 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: false,
             ),
             CustomTextField(
+              Color.fromARGB(255, 52, 50, 65),
               onSaved: (value) {
                 setState(() {
                   _password = value;

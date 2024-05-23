@@ -6,7 +6,9 @@ class CustomTextField extends StatelessWidget {
   final String regEx;
   final String hintText;
   final bool obscureText;
-  const CustomTextField({
+  Color _color = Color.fromARGB(255, 52, 50, 65);
+  CustomTextField(
+    this._color, {
     Key? key,
     required this.onSaved,
     required this.regEx,
@@ -29,7 +31,7 @@ class CustomTextField extends StatelessWidget {
             : 'Please check all the fields';
       },
       decoration: InputDecoration(
-          fillColor: Color.fromARGB(255, 52, 50, 65),
+          fillColor: _color,
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),

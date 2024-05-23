@@ -90,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CustomTextField(
+              Color.fromARGB(255, 52, 50, 65),
               onSaved: (text) {
                 setState(() {
                   email = text;
@@ -101,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: false,
             ),
             CustomTextField(
+              Color.fromARGB(255, 52, 50, 65),
               onSaved: (text) {
                 setState(() {
                   password = text;

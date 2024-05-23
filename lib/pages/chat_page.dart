@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chatify/models/chat_message.dart';
 import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/providers/chat_page_provider.dart';
 import 'package:chatify/providers/home_chats_page_provider.dart';
+import 'package:chatify/widgets/custom_list_view_tiles.dart';
+import 'package:chatify/widgets/text_field.dart';
 import 'package:chatify/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -93,12 +96,135 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
+                  _messagesListView(),
+                  _sendMessageForm(),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _sendMessageForm() {
+    return Container(
+      height: height * 0.06,
+      decoration: BoxDecoration(
+        color: const Color.fromRGBO(30, 29, 37, 1.0),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: width * 0.04,
+        vertical: height * 0.03,
+      ),
+      child: Form(
+        key: _messageFormState,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _messageTextField(),
+            _sendMessageButton(),
+            _imageMessageButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _messagesListView() {
+    if (_chatPageProvider.messages != null) {
+      if (_chatPageProvider.messages!.length != 0) {
+        return Container(
+          height: height * 0.74,
+          child: ListView.builder(
+            itemCount: _chatPageProvider.messages!.length,
+            itemBuilder: (context, index) {
+              ChatMessage _message = _chatPageProvider.messages![index];
+              bool isOwnMessage =
+                  _message.senderID == _auth.user.uid ? true : false;
+              return Container(
+                child: CustomChatListViewTile(
+                    width: width * 0.80,
+                    deviceHeight: height,
+                    isOwnMessage: isOwnMessage,
+                    message: _message,
+                    sender: widget.chat.members
+                        .where((_m) => _m.uid == _message.senderID)
+                        .first),
+              );
+            },
+          ),
+        );
+      } else {
+        return const Align(
+          alignment: Alignment.center,
+          child: Text(
+            "Be the first to say Hi!",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        );
+      }
+    } else {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+        ),
+      );
+    }
+  }
+
+  Widget _messageTextField() {
+    return SizedBox(
+      width: width * 0.65,
+      child: CustomTextField(
+        const Color.fromRGBO(30, 29, 37, 1.0),
+        onSaved: (value) {
+          _chatPageProvider.message = value;
+        },
+        regEx: r"^(?!\s*$).+",
+        hintText: 'Type a message',
+        obscureText: false,
+      ),
+    );
+  }
+
+  Widget _sendMessageButton() {
+    double size = height * 0.04;
+    return Container(
+      height: size,
+      width: size,
+      child: IconButton(
+        onPressed: () {},
+        icon: const Icon(
+          Icons.send,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _imageMessageButton() {
+    double size = height * 0.04;
+    return Container(
+      height: size,
+      width: size,
+      child: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: const Color.fromRGBO(
+          0,
+          82,
+          218,
+          1.0,
+        ),
+        child: const Icon(
+          Icons.camera_enhance,
+        ),
+      ),
     );
   }
 }
