@@ -38,4 +38,21 @@ class DatabaseService {
       print(e);
     }
   }
+
+  Stream<QuerySnapshot> getChatsForUser(String _userUID) {
+    return _db
+        .collection(CHAT_COLLECTION)
+        .where('members', arrayContains: _userUID)
+        .snapshots();
+  }
+
+  Future<QuerySnapshot> getLastMessageForChat(String _chatId) {
+    return _db
+        .collection(CHAT_COLLECTION)
+        .doc(_chatId)
+        .collection(MESSAGES_COLLECTION)
+        .orderBy('sentTime', descending: true)
+        .limit(1)
+        .get();
+  }
 }

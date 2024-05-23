@@ -45,7 +45,6 @@ class CustomListViewTile extends StatelessWidget {
             ? Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SpinKitThreeBounce(
                     color: Colors.white54,
