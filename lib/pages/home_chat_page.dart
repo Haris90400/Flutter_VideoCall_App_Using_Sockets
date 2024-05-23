@@ -1,11 +1,14 @@
 import 'package:chatify/models/chat.dart';
 import 'package:chatify/models/chat_message.dart';
 import 'package:chatify/models/user.dart';
+import 'package:chatify/pages/chat_page.dart';
 import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/providers/chats_page_provider.dart';
+import 'package:chatify/services/navigation_service.dart';
 import 'package:chatify/widgets/custom_list_view_tiles.dart';
 import 'package:chatify/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -20,11 +23,13 @@ class _ChatsPageState extends State<ChatsPage> {
   late double width;
   late AuthenticationProvider _auth;
   late ChatPageProvider _chatPageProvider;
+  late NavigationService _navigationService;
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     _auth = Provider.of<AuthenticationProvider>(context);
+    _navigationService = GetIt.instance.get<NavigationService>();
 
     return MultiProvider(
       providers: [
@@ -123,7 +128,14 @@ class _ChatsPageState extends State<ChatsPage> {
       imagePath: chat.imageURL(),
       isActive: _isActive,
       isActivity: chat.activity,
-      onTap: () {},
+      onTap: () {
+        print("clicked");
+        _navigationService.navigateToPage(
+          ChatPage(
+            chat: chat,
+          ),
+        );
+      },
     );
   }
 }

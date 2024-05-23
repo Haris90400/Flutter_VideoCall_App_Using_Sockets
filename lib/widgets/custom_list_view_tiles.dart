@@ -25,7 +25,9 @@ class CustomListViewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        onTap: () => onTap,
+        onTap: () {
+          onTap();
+        },
         minVerticalPadding: height * 0.20,
         leading: RoundedImageNetworkStatusIndicator(
           key: UniqueKey(),
