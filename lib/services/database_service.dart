@@ -1,3 +1,4 @@
+import 'package:chatify/models/chat_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String USER_COLLECTION = "Users";
@@ -54,5 +55,46 @@ class DatabaseService {
         .orderBy('sentTime', descending: true)
         .limit(1)
         .get();
+  }
+
+  Stream<QuerySnapshot> streamMessagesForChat(String _chatId) {
+    return _db
+        .collection(CHAT_COLLECTION)
+        .doc(_chatId)
+        .collection(MESSAGES_COLLECTION)
+        .orderBy("sentTime", descending: false)
+        .snapshots();
+  }
+
+  Future<void> addMessageToChat(String _chatId, ChatMessage message) async {
+    try {
+      await _db
+          .collection(CHAT_COLLECTION)
+          .doc(_chatId)
+          .collection(MESSAGES_COLLECTION)
+          .add(
+            message.toJson(),
+          );
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> updateChatData(String _chatId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection(CHAT_COLLECTION).doc(_chatId).update(
+            data,
+          );
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> deleteChat(String _chatId) async {
+    try {
+      await _db.collection(CHAT_COLLECTION).doc(_chatId).delete();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
