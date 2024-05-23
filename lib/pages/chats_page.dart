@@ -1,3 +1,6 @@
+import 'package:chatify/models/chat.dart';
+import 'package:chatify/models/chat_message.dart';
+import 'package:chatify/models/user.dart';
 import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/providers/chats_page_provider.dart';
 import 'package:chatify/widgets/custom_list_view_tiles.dart';
@@ -70,19 +73,56 @@ class _ChatsPageState extends State<ChatsPage> {
   }
 
   Widget _chatList() {
+    List<Chat>? _chats = _chatPageProvider.chats;
+    print(_chats);
     return Expanded(
-      child: _chatTile(),
+      child: (() {
+        if (_chats != null) {
+          if (_chats.length != 0) {
+            return ListView.builder(
+              itemCount: _chats.length,
+              itemBuilder: (context, index) {
+                return _chatTile(_chats[index]);
+              },
+            );
+          } else {
+            return const Center(
+                child: Text(
+              "No results found.",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          );
+        }
+      })(),
     );
   }
 
-  Widget _chatTile() {
+  Widget _chatTile(Chat chat) {
+    List<ChatUser> _reciepents = chat.recepients();
+    bool _isActive = _reciepents.any(
+      (_d) => _d.wasRecentlyActive(),
+    );
+    String _subtitle = "";
+    if (chat.messages.isNotEmpty) {
+      _subtitle = chat.messages.first.type != MessageType.TEXT
+          ? "Media Attachment"
+          : chat.messages.first.content;
+    }
     return CustomListViewTile(
       height: height * 0.10,
-      title: "Haris Khan",
-      subtitle: "Hello User",
-      imagePath: "https://i.pravatar.cc/300",
-      isActive: false,
-      isActivity: false,
+      title: chat.title(),
+      subtitle: _subtitle,
+      imagePath: chat.imageURL(),
+      isActive: _isActive,
+      isActivity: chat.activity,
       onTap: () {},
     );
   }
