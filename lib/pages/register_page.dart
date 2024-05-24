@@ -1,73 +1,83 @@
-import 'package:chatify/providers/authentication_provider.dart';
-import 'package:chatify/services/cloud_storage_service.dart';
-import 'package:chatify/services/database_service.dart';
-import 'package:chatify/services/media_services.dart';
-import 'package:chatify/services/navigation_service.dart';
-import 'package:chatify/widgets/rounded_button.dart';
-import 'package:chatify/widgets/rounded_image.dart';
-import 'package:chatify/widgets/text_field.dart';
-import 'package:file_picker/file_picker.dart';
+//Packages
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+//Services
+import '../services/media_service.dart';
+import '../services/database_service.dart';
+import '../services/cloud_storage_service.dart';
+import '../services/navigation_service.dart';
 
+//Widgets
+import '../widgets/custom_input_fields.dart';
+import '../widgets/rounded_button.dart';
+import '../widgets/rounded_image.dart';
+
+//Providers
+import '../providers/authentication_provider.dart';
+
+class RegisterPage extends StatefulWidget {
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<StatefulWidget> createState() {
+    return _RegisterPageState();
+  }
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late double height;
-  late double width;
-  final _registerFormKey = GlobalKey<FormState>();
+  late double _deviceHeight;
+  late double _deviceWidth;
 
-  PlatformFile? _profileImage;
+  late AuthenticationProvider _auth;
+  late DatabaseService _db;
+  late CloudStorageService _cloudStorage;
+  late NavigationService _navigation;
 
   String? _email;
   String? _password;
   String? _name;
+  PlatformFile? _profileImage;
 
-  late AuthenticationProvider _auth;
-  late DatabaseService _db;
-  late CloudStorageService _cloudStorageService;
-  late NavigationService _navigationService;
+  final _registerFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
     _auth = Provider.of<AuthenticationProvider>(context);
     _db = GetIt.instance.get<DatabaseService>();
-    _cloudStorageService = GetIt.instance.get<CloudStorageService>();
-    _navigationService = GetIt.instance.get<NavigationService>();
-    return _buildUi();
+    _cloudStorage = GetIt.instance.get<CloudStorageService>();
+    _navigation = GetIt.instance.get<NavigationService>();
+    _deviceHeight = MediaQuery.of(context).size.height;
+    _deviceWidth = MediaQuery.of(context).size.width;
+    return _buildUI();
   }
 
-  Widget _buildUi() {
+  Widget _buildUI() {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.symmetric(
-            horizontal: width * 0.03, vertical: height * 0.02),
-        height: height * 0.98,
-        width: width * 0.97,
+          horizontal: _deviceWidth * 0.03,
+          vertical: _deviceHeight * 0.02,
+        ),
+        height: _deviceHeight * 0.98,
+        width: _deviceWidth * 0.97,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _profileImageField(),
             SizedBox(
-              height: height * 0.05,
+              height: _deviceHeight * 0.05,
             ),
-            _registerFormField(),
+            _registerForm(),
             SizedBox(
-              height: height * 0.05,
+              height: _deviceHeight * 0.05,
             ),
             _registerButton(),
             SizedBox(
-              height: height * 0.02,
+              height: _deviceHeight * 0.02,
             ),
           ],
         ),
@@ -79,76 +89,71 @@ class _RegisterPageState extends State<RegisterPage> {
     return GestureDetector(
       onTap: () {
         GetIt.instance.get<MediaService>().pickImageFromLibrary().then(
-          (file) {
-            setState(() {
-              _profileImage = file;
-            });
+          (_file) {
+            setState(
+              () {
+                _profileImage = _file;
+              },
+            );
           },
         );
       },
       child: () {
         if (_profileImage != null) {
-          return RoundeImageFile(
+          return RoundedImageFile(
             key: UniqueKey(),
             image: _profileImage!,
-            size: height * 0.15,
+            size: _deviceHeight * 0.15,
           );
         } else {
           return RoundedImageNetwork(
             key: UniqueKey(),
-            imagePath:
-                'https://img.freepik.com/premium-photo/male-female-profile-avatar-user-avatars-gender-icons_1020867-75190.jpg?w=740',
-            size: height * 0.15,
+            imagePath: "https://i.pravatar.cc/150?img=65",
+            size: _deviceHeight * 0.15,
           );
         }
       }(),
     );
   }
 
-  Widget _registerFormField() {
-    return SizedBox(
-      height: height * 0.35,
+  Widget _registerForm() {
+    return Container(
+      height: _deviceHeight * 0.35,
       child: Form(
         key: _registerFormKey,
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomTextField(
-              Color.fromARGB(255, 52, 50, 65),
-              onSaved: (value) {
-                setState(() {
-                  _name = value;
-                });
-              },
-              regEx: r'.{8,}',
-              hintText: 'Name',
-              obscureText: false,
-            ),
-            CustomTextField(
-              Color.fromARGB(255, 52, 50, 65),
-              onSaved: (value) {
-                setState(() {
-                  _email = value;
-                });
-              },
-              regEx:
-                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-              hintText: 'Email',
-              obscureText: false,
-            ),
-            CustomTextField(
-              Color.fromARGB(255, 52, 50, 65),
-              onSaved: (value) {
-                setState(() {
-                  _password = value;
-                });
-              },
-              regEx: r'.{8,}',
-              hintText: 'Password',
-              obscureText: true,
-            ),
+            CustomTextFormField(
+                onSaved: (_value) {
+                  setState(() {
+                    _name = _value;
+                  });
+                },
+                regEx: r'.{8,}',
+                hintText: "Name",
+                obscureText: false),
+            CustomTextFormField(
+                onSaved: (_value) {
+                  setState(() {
+                    _email = _value;
+                  });
+                },
+                regEx:
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                hintText: "Email",
+                obscureText: false),
+            CustomTextFormField(
+                onSaved: (_value) {
+                  setState(() {
+                    _password = _value;
+                  });
+                },
+                regEx: r".{8,}",
+                hintText: "Password",
+                obscureText: true),
           ],
         ),
       ),
@@ -158,32 +163,19 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _registerButton() {
     return RoundedButton(
       name: "Register",
-      height: height * 0.065,
-      width: width * 0.65,
+      height: _deviceHeight * 0.065,
+      width: _deviceWidth * 0.65,
       onPressed: () async {
         if (_registerFormKey.currentState!.validate() &&
             _profileImage != null) {
           _registerFormKey.currentState!.save();
-          String? _uid = await _auth.registerUserUsingEmailPassword(
-            _email!,
-            _password!,
-          );
-          String? _imageUrl = await _cloudStorageService.uploadProfileImage(
-            _uid!,
-            _profileImage!,
-          );
-
-          await _db.createUser(
-            _uid,
-            _name!,
-            _email!,
-            _imageUrl!,
-          );
-          await _auth.logOut();
-          await _auth.loginUsingEmailPassword(
-            _email!,
-            _password!,
-          );
+          String? _uid = await _auth.registerUserUsingEmailAndPassword(
+              _email!, _password!);
+          String? _imageURL =
+              await _cloudStorage.saveUserImageToStorage(_uid!, _profileImage!);
+          await _db.createUser(_uid, _email!, _name!, _imageURL!);
+          await _auth.logout();
+          await _auth.loginUsingEmailAndPassword(_email!, _password!);
         }
       },
     );

@@ -6,8 +6,9 @@ class TopBar extends StatelessWidget {
   Widget? secondaryAction;
   double? fontSize;
 
-  late double _width;
-  late double _height;
+  late double _deviceHeight;
+  late double _deviceWidth;
+
   TopBar(
     this._barTitle, {
     this.primaryAction,
@@ -17,18 +18,18 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
-    _width = MediaQuery.of(context).size.width;
-    return _buildBui();
+    _deviceHeight = MediaQuery.of(context).size.height;
+    _deviceWidth = MediaQuery.of(context).size.width;
+    return _buildUI();
   }
 
-  Widget _buildBui() {
-    return SizedBox(
-      height: _height * 0.10,
-      width: _width,
+  Widget _buildUI() {
+    return Container(
+      height: _deviceHeight * 0.10,
+      width: _deviceWidth,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (secondaryAction != null) secondaryAction!,
@@ -46,7 +47,7 @@ class TopBar extends StatelessWidget {
       style: TextStyle(
         color: Colors.white,
         fontSize: fontSize,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w700,
       ),
     );
   }

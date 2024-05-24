@@ -1,9 +1,15 @@
-import 'package:chatify/models/user.dart';
-import 'package:chatify/services/database_service.dart';
-import 'package:chatify/services/navigation_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//Packages
+import 'package:chatify/models/chat_user.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+
+//Services
+import '../services/database_service.dart';
+import '../services/navigation_service.dart';
+
+//Models
+import '../models/chat_user.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   late final FirebaseAuth _auth;
@@ -11,6 +17,7 @@ class AuthenticationProvider extends ChangeNotifier {
   late final DatabaseService _databaseService;
 
   late ChatUser user;
+
   AuthenticationProvider() {
     _auth = FirebaseAuth.instance;
     _navigationService = GetIt.instance.get<NavigationService>();
@@ -18,59 +25,57 @@ class AuthenticationProvider extends ChangeNotifier {
 
     _auth.authStateChanges().listen((_user) {
       if (_user != null) {
-        _databaseService.updateLatsActiveTime(_user.uid);
+        _databaseService.updateUserLastSeenTime(_user.uid);
         _databaseService.getUser(_user.uid).then(
-          (snapshot) {
+          (_snapshot) {
             Map<String, dynamic> _userData =
-                snapshot.data()! as Map<String, dynamic>;
+                _snapshot.data()! as Map<String, dynamic>;
             user = ChatUser.fromJSON(
               {
                 "uid": _user.uid,
                 "name": _userData["name"],
                 "email": _userData["email"],
-                "lastActive": _userData["lastActive"],
-                "imageUrl": _userData["imageUrl"],
+                "last_active": _userData["last_active"],
+                "image": _userData["image"],
               },
             );
             _navigationService.removeAndNavigateToRoute('/home');
           },
         );
       } else {
-        _navigationService.removeAndNavigateToRoute('/login');
+        if (_navigationService.getCurrentRoute() != '/login') {
+          _navigationService.removeAndNavigateToRoute('/login');
+        }
       }
     });
   }
 
-  Future<void> loginUsingEmailPassword(String _email, String _password) async {
+  Future<void> loginUsingEmailAndPassword(
+      String _email, String _password) async {
     try {
       await _auth.signInWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
-      print(_auth.currentUser);
+          email: _email, password: _password);
     } on FirebaseAuthException {
-      print("Error logging in!");
+      print("Error logging user into Firebase");
     } catch (e) {
       print(e);
     }
   }
 
-  Future<String?> registerUserUsingEmailPassword(
+  Future<String?> registerUserUsingEmailAndPassword(
       String _email, String _password) async {
     try {
       UserCredential _credentials = await _auth.createUserWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
+          email: _email, password: _password);
       return _credentials.user!.uid;
     } on FirebaseAuthException {
-      print("error registering user");
+      print("Error registering user.");
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> logOut() async {
+  Future<void> logout() async {
     try {
       await _auth.signOut();
     } catch (e) {

@@ -1,35 +1,40 @@
-import 'package:chatify/services/cloud_storage_service.dart';
-import 'package:chatify/services/database_service.dart';
-import 'package:chatify/services/media_services.dart';
-import 'package:chatify/services/navigation_service.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:chatify/firebase_options.dart';
 import 'package:flutter/material.dart';
+
+//Packages
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 
-import '../firebase_options.dart';
+//Services
+import '../services/navigation_service.dart';
+import '../services/media_service.dart';
+import '../services/cloud_storage_service.dart';
+import '../services/database_service.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   final VoidCallback onInitializationComplete;
-  const SplashScreen({Key? key, required this.onInitializationComplete})
-      : super(
-          key: key,
-        );
+
+  const SplashPage({
+    required Key key,
+    required this.onInitializationComplete,
+  }) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<StatefulWidget> createState() {
+    return _SplashPageState();
+  }
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Future.delayed(
-      Duration(seconds: 3),
-    ).then(
-      (value) => _setup().then(
-        (value) => widget.onInitializationComplete(),
-      ),
+    Future.delayed(Duration(seconds: 1)).then(
+      (_) {
+        _setup().then(
+          (_) => widget.onInitializationComplete(),
+        );
+      },
     );
   }
 
@@ -37,21 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chatify',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromRGBO(36, 35, 39, 1.0),
+        backgroundColor: Color.fromRGBO(36, 35, 49, 1.0),
+        scaffoldBackgroundColor: Color.fromRGBO(36, 35, 49, 1.0),
       ),
       home: Scaffold(
         body: Center(
           child: Container(
             height: 200,
             width: 200,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/logo.png',
-                ),
                 fit: BoxFit.contain,
+                image: AssetImage('assets/images/logo.png'),
               ),
             ),
           ),
@@ -72,14 +75,14 @@ class _SplashScreenState extends State<SplashScreen> {
     GetIt.instance.registerSingleton<NavigationService>(
       NavigationService(),
     );
-    GetIt.instance.registerSingleton<DatabaseService>(
-      DatabaseService(),
-    );
     GetIt.instance.registerSingleton<MediaService>(
       MediaService(),
     );
     GetIt.instance.registerSingleton<CloudStorageService>(
       CloudStorageService(),
+    );
+    GetIt.instance.registerSingleton<DatabaseService>(
+      DatabaseService(),
     );
   }
 }

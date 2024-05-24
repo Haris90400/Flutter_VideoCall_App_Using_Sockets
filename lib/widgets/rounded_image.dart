@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -7,8 +6,9 @@ import 'package:flutter/material.dart';
 class RoundedImageNetwork extends StatelessWidget {
   final String imagePath;
   final double size;
-  const RoundedImageNetwork({
-    Key? key,
+
+  RoundedImageNetwork({
+    required Key key,
     required this.imagePath,
     required this.size,
   }) : super(key: key);
@@ -32,11 +32,12 @@ class RoundedImageNetwork extends StatelessWidget {
   }
 }
 
-class RoundeImageFile extends StatelessWidget {
+class RoundedImageFile extends StatelessWidget {
   final PlatformFile image;
   final double size;
-  const RoundeImageFile({
-    Key? key,
+
+  RoundedImageFile({
+    required Key key,
     required this.image,
     required this.size,
   }) : super(key: key);
@@ -44,8 +45,8 @@ class RoundeImageFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size,
       width: size,
+      height: size,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -53,19 +54,17 @@ class RoundeImageFile extends StatelessWidget {
             File(image.path!),
           ),
         ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(size),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(size)),
         color: Colors.black,
       ),
     );
   }
 }
 
-class RoundedImageNetworkStatusIndicator extends RoundedImageNetwork {
+class RoundedImageNetworkWithStatusIndicator extends RoundedImageNetwork {
   final bool isActive;
 
-  const RoundedImageNetworkStatusIndicator({
+  RoundedImageNetworkWithStatusIndicator({
     required Key key,
     required String imagePath,
     required double size,
@@ -86,7 +85,7 @@ class RoundedImageNetworkStatusIndicator extends RoundedImageNetwork {
             color: isActive ? Colors.green : Colors.red,
             borderRadius: BorderRadius.circular(size),
           ),
-        )
+        ),
       ],
     );
   }

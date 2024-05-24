@@ -33,8 +33,8 @@ class ChatMessage {
     return ChatMessage(
       content: _json["content"],
       type: _messageType,
-      senderID: _json["senderID"],
-      sentTime: _json["sentTime"].toDate(),
+      senderID: _json["sender_id"],
+      sentTime: _json["sent_time"].toDate(),
     );
   }
 

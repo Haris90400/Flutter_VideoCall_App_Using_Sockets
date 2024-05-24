@@ -1,46 +1,55 @@
-import 'package:chatify/providers/authentication_provider.dart';
-import 'package:chatify/services/navigation_service.dart';
-import 'package:chatify/widgets/rounded_button.dart';
-import 'package:chatify/widgets/text_field.dart';
+//Packages
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
+
+//Widgets
+import '../widgets/custom_input_fields.dart';
+import '../widgets/rounded_button.dart';
+
+//Providers
+import '../providers/authentication_provider.dart';
+
+//Services
+import '../services/navigation_service.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<StatefulWidget> createState() {
+    return _LoginPageState();
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late double height;
-  late double width;
-  late NavigationService _navigationService;
-  late AuthenticationProvider _authenticationProvider;
+  late double _deviceHeight;
+  late double _deviceWidth;
+
+  late AuthenticationProvider _auth;
+  late NavigationService _navigation;
+
   final _loginFormKey = GlobalKey<FormState>();
 
-  String? email;
-  String? password;
+  String? _email;
+  String? _password;
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
-    _authenticationProvider = Provider.of<AuthenticationProvider>(context);
-    _navigationService = GetIt.instance.get<NavigationService>();
-    return _buildUi();
+    _deviceHeight = MediaQuery.of(context).size.height;
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _auth = Provider.of<AuthenticationProvider>(context);
+    _navigation = GetIt.instance.get<NavigationService>();
+    return _buildUI();
   }
 
-  Widget _buildUi() {
+  Widget _buildUI() {
     return Scaffold(
       body: Container(
-        height: height * 0.98,
-        width: width * 0.97,
         padding: EdgeInsets.symmetric(
-          horizontal: width * 0.03,
-          vertical: height * 0.02,
+          horizontal: _deviceWidth * 0.03,
+          vertical: _deviceHeight * 0.02,
         ),
+        height: _deviceHeight * 0.98,
+        width: _deviceWidth * 0.97,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -48,17 +57,17 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             _pageTitle(),
             SizedBox(
-              height: height * 0.04,
+              height: _deviceHeight * 0.04,
             ),
             _loginForm(),
             SizedBox(
-              height: height * 0.05,
+              height: _deviceHeight * 0.05,
             ),
             _loginButton(),
             SizedBox(
-              height: height * 0.02,
+              height: _deviceHeight * 0.02,
             ),
-            _registerAccount(),
+            _registerAccountLink(),
           ],
         ),
       ),
@@ -67,8 +76,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _pageTitle() {
     return Container(
-      height: height * 0.10,
-      child: const Text(
+      height: _deviceHeight * 0.10,
+      child: Text(
         'Chatify',
         style: TextStyle(
           color: Colors.white,
@@ -81,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginForm() {
     return Container(
-      height: height * 0.192,
+      height: _deviceHeight * 0.18,
       child: Form(
         key: _loginFormKey,
         child: Column(
@@ -89,29 +98,25 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CustomTextField(
-              Color.fromARGB(255, 52, 50, 65),
-              onSaved: (text) {
-                setState(() {
-                  email = text;
-                });
-              },
-              regEx:
-                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-              hintText: "Email",
-              obscureText: false,
-            ),
-            CustomTextField(
-              Color.fromARGB(255, 52, 50, 65),
-              onSaved: (text) {
-                setState(() {
-                  password = text;
-                });
-              },
-              regEx: r".{8,}",
-              hintText: "Password",
-              obscureText: true,
-            )
+            CustomTextFormField(
+                onSaved: (_value) {
+                  setState(() {
+                    _email = _value;
+                  });
+                },
+                regEx:
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                hintText: "Email",
+                obscureText: false),
+            CustomTextFormField(
+                onSaved: (_value) {
+                  setState(() {
+                    _password = _value;
+                  });
+                },
+                regEx: r".{8,}",
+                hintText: "Password",
+                obscureText: true),
           ],
         ),
       ),
@@ -120,27 +125,27 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginButton() {
     return RoundedButton(
-      name: 'Login',
-      height: height * 0.06,
-      width: width * 0.65,
+      name: "Login",
+      height: _deviceHeight * 0.065,
+      width: _deviceWidth * 0.65,
       onPressed: () {
         if (_loginFormKey.currentState!.validate()) {
           _loginFormKey.currentState!.save();
-          _authenticationProvider.loginUsingEmailPassword(email!, password!);
+          _auth.loginUsingEmailAndPassword(_email!, _password!);
         }
       },
     );
   }
 
-  Widget _registerAccount() {
+  Widget _registerAccountLink() {
     return GestureDetector(
-      onTap: () {
-        _navigationService.navigateToRoute('/register');
-      },
-      child: const Text(
-        'Don\'t have an account?',
-        style: TextStyle(
-          color: Colors.blueAccent,
+      onTap: () => _navigation.navigateToRoute('/register'),
+      child: Container(
+        child: Text(
+          'Don\'t have an account?',
+          style: TextStyle(
+            color: Colors.blueAccent,
+          ),
         ),
       ),
     );

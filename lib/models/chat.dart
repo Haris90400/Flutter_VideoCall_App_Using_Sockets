@@ -1,5 +1,4 @@
-import 'package:chatify/models/user.dart';
-
+import '../models/chat_user.dart';
 import '../models/chat_message.dart';
 
 class Chat {
@@ -35,7 +34,7 @@ class Chat {
 
   String imageURL() {
     return !group
-        ? _recepients.first.imageUrl
+        ? _recepients.first.imageURL
         : "https://e7.pngegg.com/pngimages/380/670/png-clipart-group-chat-logo-blue-area-text-symbol-metroui-apps-live-messenger-alt-2-blue-text.png";
   }
 }

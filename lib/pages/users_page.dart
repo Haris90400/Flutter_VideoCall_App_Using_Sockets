@@ -1,21 +1,22 @@
+//Packages
 import 'package:flutter/material.dart';
 
 class UsersPage extends StatefulWidget {
-  const UsersPage({super.key});
-
   @override
-  State<UsersPage> createState() => _UsersPageState();
-}
-
-class _UsersPageState extends State<UsersPage> {
-  @override
-  Widget build(BuildContext context) {
-    return _buildUi();
+  State<StatefulWidget> createState() {
+    return _UsersPageState();
   }
 }
 
-Widget _buildUi() {
-  return Scaffold(
-    backgroundColor: Colors.yellowAccent,
-  );
+class _UsersPageState extends State<UsersPage> {
+  late double _deviceHeight;
+  late double _deviceWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    _deviceHeight = MediaQuery.of(context).size.height;
+    _deviceWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold();
+  }
 }
