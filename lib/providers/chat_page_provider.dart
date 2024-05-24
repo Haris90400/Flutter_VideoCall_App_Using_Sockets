@@ -77,7 +77,8 @@ class ChatPageProvider extends ChangeNotifier {
             (_) {
               if (_messagesListViewController.hasClients) {
                 _messagesListViewController.jumpTo(
-                    _messagesListViewController.position.maxScrollExtent);
+                  _messagesListViewController.position.maxScrollExtent,
+                );
               }
             },
           );
