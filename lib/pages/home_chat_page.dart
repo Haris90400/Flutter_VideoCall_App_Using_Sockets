@@ -79,7 +79,7 @@ class _ChatsPageState extends State<ChatsPage> {
 
   Widget _chatList() {
     List<Chat>? _chats = _chatPageProvider.chats;
-    print(_chats);
+
     return Expanded(
       child: (() {
         if (_chats != null) {

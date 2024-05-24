@@ -75,6 +75,7 @@ class DatabaseService {
           .add(
             message.toJson(),
           );
+      print(message.toJson());
     } catch (e) {
       print(e.toString());
     }

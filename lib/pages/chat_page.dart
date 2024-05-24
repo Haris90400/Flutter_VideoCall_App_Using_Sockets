@@ -64,6 +64,7 @@ class _ChatPageState extends State<ChatPage> {
     return Builder(
       builder: (context) {
         _chatPageProvider = context.watch<ChatPageProvider>();
+
         return Scaffold(
           body: SingleChildScrollView(
             child: Container(
@@ -199,7 +200,13 @@ class _ChatPageState extends State<ChatPage> {
       height: size,
       width: size,
       child: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          if (_messageFormState.currentState!.validate()) {
+            _messageFormState.currentState!.save();
+            _chatPageProvider.sendTextMessage();
+            _messageFormState.currentState!.reset();
+          }
+        },
         icon: const Icon(
           Icons.send,
           color: Colors.white,

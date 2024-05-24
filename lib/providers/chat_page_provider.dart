@@ -43,8 +43,8 @@ class ChatPageProvider extends ChangeNotifier {
   }
   @override
   void dispose() {
-    super.dispose();
     _messagesStream.cancel();
+    super.dispose();
   }
 
   void listenToMessages() {
@@ -59,6 +59,7 @@ class ChatPageProvider extends ChangeNotifier {
             },
           ).toList();
           messages = _messages;
+
           notifyListeners();
         },
       );
@@ -75,6 +76,7 @@ class ChatPageProvider extends ChangeNotifier {
 
   void sendTextMessage() {
     if (_message != null) {
+      print(_message);
       ChatMessage _messageToSend = ChatMessage(
         content: _message!,
         type: MessageType.TEXT,
