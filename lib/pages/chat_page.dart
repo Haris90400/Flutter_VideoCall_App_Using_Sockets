@@ -232,7 +232,9 @@ class _ChatPageState extends State<ChatPage> {
         onPressed: () {
           _pageProvider.sendImageMessage();
         },
-        child: Icon(Icons.camera_enhance),
+        child: Icon(
+          Icons.camera_enhance,
+        ),
       ),
     );
   }

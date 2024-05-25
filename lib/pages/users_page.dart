@@ -4,6 +4,7 @@ import 'package:chatify/providers/authentication_provider.dart';
 import 'package:chatify/providers/users_page_provider.dart';
 import 'package:chatify/widgets/custom_input_fields.dart';
 import 'package:chatify/widgets/custom_list_view_tiles.dart';
+import 'package:chatify/widgets/rounded_button.dart';
 import 'package:chatify/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +58,9 @@ class _UsersPageState extends State<UsersPage> {
             TopBar(
               'Users',
               primaryAction: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _auth.logout();
+                },
                 icon: const Icon(
                   Icons.logout,
                   color: Color.fromRGBO(0, 82, 218, 1.0),
@@ -65,13 +68,17 @@ class _UsersPageState extends State<UsersPage> {
               ),
             ),
             CustomTextField(
-              onEditingComplete: (value) {},
-              hintText: '',
+              onEditingComplete: (value) {
+                _pageProvider.getUsers(name: value);
+                FocusScope.of(context).unfocus();
+              },
+              hintText: 'Search...',
               obscureText: false,
               controller: _searchFieldController,
               icon: Icons.search,
             ),
             _usersList(),
+            _creatChatButton(),
           ],
         ),
       );
@@ -94,8 +101,14 @@ class _UsersPageState extends State<UsersPage> {
                   subtitle: "Last Active: ${_users[index].lastDayActive()}",
                   imagePath: _users[index].imageURL,
                   isActive: _users[index].wasRecentlyActive(),
-                  isSelected: false,
-                  onTap: () {},
+                  isSelected: _pageProvider.selectedUsers.contains(
+                    _users[index],
+                  ),
+                  onTap: () {
+                    _pageProvider.updateSelectedUsers(
+                      _users[index],
+                    );
+                  },
                 );
               },
             );
@@ -117,6 +130,22 @@ class _UsersPageState extends State<UsersPage> {
           );
         }
       }(),
+    );
+  }
+
+  Widget _creatChatButton() {
+    return Visibility(
+      visible: _pageProvider.selectedUsers.isNotEmpty,
+      child: RoundedButton(
+        name: _pageProvider.selectedUsers.length == 1
+            ? "Chat With ${_pageProvider.selectedUsers.first.name}"
+            : "Create group Chat",
+        height: _deviceHeight * 0.08,
+        width: _deviceHeight * 0.80,
+        onPressed: () {
+          _pageProvider.createChat();
+        },
+      ),
     );
   }
 }
