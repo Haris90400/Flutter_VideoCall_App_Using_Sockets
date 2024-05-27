@@ -1,4 +1,4 @@
-import 'package:chatify/firebase_options.dart';
+import 'package:chatify/firebase_option.dart';
 import 'package:flutter/material.dart';
 
 //Packages
